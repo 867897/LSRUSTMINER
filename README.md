@@ -1,6 +1,6 @@
 # LSRustMiner
 
-LSRustMiner 是一个矿池代理程序。支持套入NUC代理。可配合LSR使用。
+LSRustMiner 是一个矿池代理程序。支持套入NUC代理。可配合LSR使用。程序为自用版本，所以其他币种懒得搞，只针对了BTC
 
 ## 当前版本重要说明
 
