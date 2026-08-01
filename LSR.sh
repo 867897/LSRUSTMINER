@@ -12,8 +12,8 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-REPO_URL="https://github.com/867897/LSRUSTMINER.git"
-REPO_BRANCH="${REPO_BRANCH:-}"
+REPO_BRANCH="${REPO_BRANCH:-main}"
+RAW_BASE_URL="https://raw.githubusercontent.com/867897/LSRUSTMINER/${REPO_BRANCH}"
 INSTALL_DIR="/opt/LSR"
 SERVICE_NAME="LSR"
 BINARY_NAME="LSR"
@@ -32,10 +32,10 @@ check_root() {
 }
 
 ensure_tools() {
-    if ! command -v git >/dev/null 2>&1; then
-        echo -e "${YELLOW}正在安装 git...${NC}"
+    if ! command -v curl >/dev/null 2>&1; then
+        echo -e "${YELLOW}正在安装 curl...${NC}"
         apt-get update
-        apt-get install -y git
+        apt-get install -y curl
     fi
 }
 
@@ -83,13 +83,10 @@ fetch_package() {
 
     ensure_tools
     TMP_DIR="$(mktemp -d)"
-    echo -e "${YELLOW}正在从 GitHub 拉取 LSR 客户端...${NC}" >&2
-    if [ -n "${REPO_BRANCH}" ]; then
-        git clone --depth 1 --branch "${REPO_BRANCH}" "${REPO_URL}" "${TMP_DIR}/repo" >&2
-    else
-        git clone --depth 1 "${REPO_URL}" "${TMP_DIR}/repo" >&2
-    fi
-    echo "${TMP_DIR}/repo/${LINUX_BINARY_PATH}"
+    local target="${TMP_DIR}/${BINARY_NAME}"
+    echo -e "${YELLOW}正在从 GitHub 下载 ${LINUX_BINARY_PATH}...${NC}" >&2
+    curl -fL "${RAW_BASE_URL}/${LINUX_BINARY_PATH}" -o "${target}" >&2
+    echo "${target}"
 }
 
 cleanup_tmp() {
