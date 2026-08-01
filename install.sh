@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# LSRustMiner installer for Ubuntu/Debian.
+# LSRustMiner server installer for Ubuntu/Debian.
 # Source repository: https://github.com/867897/LSRUSTMINER
 
 set -euo pipefail
@@ -17,6 +17,7 @@ INSTALL_DIR="/opt/lsrustminer"
 SERVICE_NAME="lsrustminer"
 BINARY_NAME="LSRustMiner"
 LINUX_BINARY_PATH="Linux/${BINARY_NAME}"
+WEB_PORT_DEFAULT="16680"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TMP_DIR=""
@@ -53,6 +54,20 @@ check_status() {
     fi
     echo -e "${RED}未运行${NC}"
     return 1
+}
+
+print_access() {
+    local ip
+    ip="$(hostname -I 2>/dev/null | awk '{print $1}')"
+    [ -z "${ip}" ] && ip="<服务器IP>"
+
+    echo ""
+    echo -e "${BLUE}========== Web 后台信息 ==========${NC}"
+    echo -e "访问地址: ${GREEN}http://${ip}:${WEB_PORT_DEFAULT}${NC}"
+    echo -e "默认账号: ${GREEN}admin${NC}"
+    echo -e "默认密码: ${GREEN}admin123${NC}"
+    echo -e "${YELLOW}提示: 当前版本仅 SHA256D 算法完全支持，暂时只建议用于 BTC。${NC}"
+    echo -e "${BLUE}==================================${NC}"
 }
 
 fetch_package() {
@@ -107,30 +122,22 @@ install_program() {
     echo -e "${YELLOW}正在安装 LSRustMiner...${NC}"
 
     if [ -f "${INSTALL_DIR}/${BINARY_NAME}" ]; then
-        echo -e "${RED}程序已安装。如需覆盖安装，请选择“重新安装”。${NC}"
+        echo -e "${RED}程序已安装。如需覆盖安装，请选择“重新安装程序”。${NC}"
         return 1
     fi
 
-    local package_dir
-    package_dir="$(fetch_package)"
+    local package_file
+    package_file="$(fetch_package)"
 
-    if [ ! -f "${package_dir}" ]; then
+    if [ ! -f "${package_file}" ]; then
         echo -e "${RED}错误: 未找到服务端二进制文件 ${LINUX_BINARY_PATH}${NC}"
-        echo -e "${YELLOW}请确认 GitHub 仓库中存在 Linux/${BINARY_NAME}。${NC}"
+        echo -e "${YELLOW}请确认 GitHub 仓库中存在 Linux/${BINARY_NAME}${NC}"
         return 1
     fi
 
     mkdir -p "${INSTALL_DIR}/data"
-
-    cp "${package_dir}" "${INSTALL_DIR}/${BINARY_NAME}"
+    cp "${package_file}" "${INSTALL_DIR}/${BINARY_NAME}"
     chmod +x "${INSTALL_DIR}/${BINARY_NAME}"
-
-    local package_root
-    package_root="$(dirname "$(dirname "${package_dir}")")"
-    if [ -d "${package_root}/static" ]; then
-        rm -rf "${INSTALL_DIR}/static"
-        cp -r "${package_root}/static" "${INSTALL_DIR}/static"
-    fi
 
     create_service
     systemctl daemon-reload
@@ -141,6 +148,7 @@ install_program() {
     echo "安装目录: ${INSTALL_DIR}"
     echo "配置目录: ${INSTALL_DIR}/data"
     echo -e "服务状态: $(check_status)"
+    print_access
 }
 
 reinstall_program() {
@@ -221,6 +229,7 @@ start_program() {
     systemctl start "${SERVICE_NAME}"
     sleep 1
     echo -e "服务状态: $(check_status)"
+    print_access
 }
 
 restart_program() {
@@ -232,6 +241,7 @@ restart_program() {
     systemctl restart "${SERVICE_NAME}"
     sleep 1
     echo -e "服务状态: $(check_status)"
+    print_access
 }
 
 uninstall_program_silent() {
@@ -265,6 +275,7 @@ show_menu() {
     echo -e "当前状态: $(check_status)"
     if [ -f "${INSTALL_DIR}/${BINARY_NAME}" ]; then
         echo -e "安装目录: ${GREEN}${INSTALL_DIR}${NC}"
+        print_access
     fi
     echo -e "${BLUE}==========================================${NC}"
     echo ""
