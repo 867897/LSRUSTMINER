@@ -24,6 +24,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/867897/LSRUSTMINER/main/LSR.
 首次启动且没有已有配置时，默认后台账号为：
 
 ```text
+默认端口：16680
 用户名：admin
 密码：admin123
 ```
