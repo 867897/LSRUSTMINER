@@ -2,7 +2,7 @@
 
 # LSR client installer for Ubuntu/Debian.
 # Source repository: https://github.com/867897/LSRUSTMINER
-# The LSR binary is stored in the lsr-client/ folder.
+# The LSR Linux binary is stored in the LSR/linux/ folder.
 
 set -euo pipefail
 
@@ -17,6 +17,7 @@ REPO_BRANCH="${REPO_BRANCH:-}"
 INSTALL_DIR="/opt/LSR"
 SERVICE_NAME="LSR"
 BINARY_NAME="LSR"
+LINUX_BINARY_PATH="LSR/linux/${BINARY_NAME}"
 WEB_PORT_DEFAULT="9099"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -66,12 +67,17 @@ print_access() {
 
 fetch_package() {
     if [ -f "${SCRIPT_DIR}/${BINARY_NAME}" ]; then
-        echo "${SCRIPT_DIR}"
+        echo "${SCRIPT_DIR}/${BINARY_NAME}"
         return 0
     fi
 
-    if [ -f "${SCRIPT_DIR}/lsr-client/${BINARY_NAME}" ]; then
-        echo "${SCRIPT_DIR}/lsr-client"
+    if [ -f "${SCRIPT_DIR}/${LINUX_BINARY_PATH}" ]; then
+        echo "${SCRIPT_DIR}/${LINUX_BINARY_PATH}"
+        return 0
+    fi
+
+    if [ -f "${SCRIPT_DIR}/linux/${BINARY_NAME}" ]; then
+        echo "${SCRIPT_DIR}/linux/${BINARY_NAME}"
         return 0
     fi
 
@@ -83,7 +89,7 @@ fetch_package() {
     else
         git clone --depth 1 "${REPO_URL}" "${TMP_DIR}/repo" >&2
     fi
-    echo "${TMP_DIR}/repo/lsr-client"
+    echo "${TMP_DIR}/repo/${LINUX_BINARY_PATH}"
 }
 
 cleanup_tmp() {
@@ -126,14 +132,14 @@ install_program() {
     local package_dir
     package_dir="$(fetch_package)"
 
-    if [ ! -f "${package_dir}/${BINARY_NAME}" ]; then
-        echo -e "${RED}错误: 未找到 ${BINARY_NAME}${NC}"
-        echo -e "${YELLOW}请确认 GitHub 仓库中的 lsr-client/ 文件夹已上传编译好的 LSR 客户端。${NC}"
+    if [ ! -f "${package_dir}" ]; then
+        echo -e "${RED}错误: 未找到 LSR 客户端二进制文件 ${LINUX_BINARY_PATH}${NC}"
+        echo -e "${YELLOW}请确认 GitHub 仓库中存在 LSR/linux/${BINARY_NAME}。${NC}"
         return 1
     fi
 
     mkdir -p "${INSTALL_DIR}"
-    cp "${package_dir}/${BINARY_NAME}" "${INSTALL_DIR}/${BINARY_NAME}"
+    cp "${package_dir}" "${INSTALL_DIR}/${BINARY_NAME}"
     chmod +x "${INSTALL_DIR}/${BINARY_NAME}"
 
     create_service
