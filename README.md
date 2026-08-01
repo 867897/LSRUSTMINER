@@ -11,11 +11,11 @@ LSRustMiner 是一个矿池代理程序。支持套入NUC代理。可配合LSR�
 
 ## 安装脚本
 ```text
-bash <(curl -s -L https://github.com/867897/LSRUSTMINER/blob/main/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/867897/LSRUSTMINER/main/install.sh)
 ```
 ## LSR安装
 ```text
-bash <(curl -s -L https://github.com/867897/LSRUSTMINER/blob/main/LSR.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/867897/LSRUSTMINER/main/LSR.sh)
 ```
 ## 默认后台账号
 
