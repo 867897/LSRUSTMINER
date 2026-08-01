@@ -16,6 +16,7 @@ REPO_BRANCH="${REPO_BRANCH:-}"
 INSTALL_DIR="/opt/lsrustminer"
 SERVICE_NAME="lsrustminer"
 BINARY_NAME="LSRustMiner"
+LINUX_BINARY_PATH="Linux/${BINARY_NAME}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TMP_DIR=""
@@ -56,7 +57,12 @@ check_status() {
 
 fetch_package() {
     if [ -f "${SCRIPT_DIR}/${BINARY_NAME}" ]; then
-        echo "${SCRIPT_DIR}"
+        echo "${SCRIPT_DIR}/${BINARY_NAME}"
+        return 0
+    fi
+
+    if [ -f "${SCRIPT_DIR}/${LINUX_BINARY_PATH}" ]; then
+        echo "${SCRIPT_DIR}/${LINUX_BINARY_PATH}"
         return 0
     fi
 
@@ -68,7 +74,7 @@ fetch_package() {
     else
         git clone --depth 1 "${REPO_URL}" "${TMP_DIR}/repo" >&2
     fi
-    echo "${TMP_DIR}/repo"
+    echo "${TMP_DIR}/repo/${LINUX_BINARY_PATH}"
 }
 
 cleanup_tmp() {
@@ -111,20 +117,22 @@ install_program() {
     local package_dir
     package_dir="$(fetch_package)"
 
-    if [ ! -f "${package_dir}/${BINARY_NAME}" ]; then
-        echo -e "${RED}错误: GitHub 仓库根目录未找到 ${BINARY_NAME}${NC}"
-        echo -e "${YELLOW}请确认已上传编译好的服务端二进制文件。${NC}"
+    if [ ! -f "${package_dir}" ]; then
+        echo -e "${RED}错误: 未找到服务端二进制文件 ${LINUX_BINARY_PATH}${NC}"
+        echo -e "${YELLOW}请确认 GitHub 仓库中存在 Linux/${BINARY_NAME}。${NC}"
         return 1
     fi
 
     mkdir -p "${INSTALL_DIR}/data"
 
-    cp "${package_dir}/${BINARY_NAME}" "${INSTALL_DIR}/${BINARY_NAME}"
+    cp "${package_dir}" "${INSTALL_DIR}/${BINARY_NAME}"
     chmod +x "${INSTALL_DIR}/${BINARY_NAME}"
 
-    if [ -d "${package_dir}/static" ]; then
+    local package_root
+    package_root="$(dirname "$(dirname "${package_dir}")")"
+    if [ -d "${package_root}/static" ]; then
         rm -rf "${INSTALL_DIR}/static"
-        cp -r "${package_dir}/static" "${INSTALL_DIR}/static"
+        cp -r "${package_root}/static" "${INSTALL_DIR}/static"
     fi
 
     create_service
