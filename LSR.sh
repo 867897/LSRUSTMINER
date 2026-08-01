@@ -2,7 +2,7 @@
 
 # LSR client installer for Ubuntu/Debian.
 # Source repository: https://github.com/867897/LSRUSTMINER
-# The LSR client files are stored in the lsr-client/ folder.
+# The LSR binary is stored in the lsr-client/ folder.
 
 set -euo pipefail
 
@@ -14,9 +14,9 @@ NC='\033[0m'
 
 REPO_URL="https://github.com/867897/LSRUSTMINER.git"
 REPO_BRANCH="${REPO_BRANCH:-}"
-INSTALL_DIR="/opt/lsr-client"
-SERVICE_NAME="lsr-client"
-BINARY_NAME="lsr-client"
+INSTALL_DIR="/opt/LSR"
+SERVICE_NAME="LSR"
+BINARY_NAME="LSR"
 WEB_PORT_DEFAULT="9099"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
