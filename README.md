@@ -4,7 +4,7 @@ LSRustMiner 是一个矿池代理程序。支持套入NUC代理。可配合LSR�
 
 ## 当前版本重要说明
 
-## 只支持BTC SHA256算法币种，其它币种都没有完善抽水，不嫌弃的可以用。嫌弃的转移至github.com/EvilGenius-dot/RustMinerSystem/tree/main
+## 只支持BTC SHA256算法币种，其它币种都没有完善抽水，不嫌弃的可以用。嫌弃的转移至https://github.com/EvilGenius-dot/RustMinerSystem/tree/main
 
 **当前版本仅 SHA256D 算法完全支持，其它算法未完善，未测试，暂时只建议用于 BTC。**
 
