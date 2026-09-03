@@ -66,7 +66,6 @@ print_access() {
     echo -e "访问地址: ${GREEN}http://${ip}:${WEB_PORT_DEFAULT}${NC}"
     echo -e "默认账号: ${GREEN}admin${NC}"
     echo -e "默认密码: ${GREEN}admin123${NC}"
-    echo -e "${YELLOW}提示: 当前版本仅 SHA256D 算法完全支持，暂时只建议用于 BTC。${NC}"
     echo -e "${BLUE}==================================${NC}"
 }
 
