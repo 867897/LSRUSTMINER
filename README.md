@@ -10,6 +10,11 @@ LSRustMiner 是一个矿池代理程序。支持套入NUC代理。可配合LSR�
 ```bash
 bash <(curl -s -L https://raw.githubusercontent.com/867897/LSRUSTMINER/main/install.sh)
 ```
+```
+默认端口 16680
+默认密码 admin/admin123
+```
+
 ## 需要可联系 [Telegram 联系我](https://t.me/ls2858) 试用后再谈
 
 ## 可自行修改，扩展各种算法以及功能，本套源码目前BTC LTC ETC CKB ZEC跑通，其余算法没有完善以及添加，代码拿去后可以自己进行扩展。
