@@ -17,3 +17,6 @@ bash <(curl -s -L https://raw.githubusercontent.com/867897/LSRUSTMINER/main/inst
 
 本程序仅供学习、研究和合法授权环境下使用。使用者应自行确认所在地区法律法规，并对使用行为和结果负责。
 
+## 许可证
+
+本项目基于 [MIT License](./LICENSE) 协议开源。
