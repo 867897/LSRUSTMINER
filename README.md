@@ -1,3 +1,5 @@
+# source code文件夹为本程序最最最第一版本的源代码。
+
 # LSRustMiner
 
 LSRustMiner 是一个矿池代理程序。支持套入NUC代理。可配合LSR使用。
